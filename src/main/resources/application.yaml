@@ -1,0 +1,16 @@
+spring:
+  data:
+    mongodb:
+      password: planta # TODO: Hide me
+      username: hortaja # TODO: Hide me
+      host: localhost # TODO: Hide me
+      port: 27017
+      authentication-database: admin # TODO: Hide me
+      database: hortaja
+      uuid-representation: standard
+      auto-index-creation: true
+
+application:
+  auth:
+    secret: secret # TODO: Hide me
+    refresh: refresh # TODO: Hide me
