@@ -1,4 +1,4 @@
 build:
   docker:
     web: src/main/docker/Application.Dockerfile
-    database: src/main/docker/database.yml
+    database: src/main/docker/Database.Dockerfile
