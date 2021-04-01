@@ -10,5 +10,6 @@ import java.util.*
 interface HortaJaUserRepository : ReactiveCrudRepository<HortaJaUser, UUID> {
 
   fun findByEmail(email: String): Mono<HortaJaUser>
+  fun findByUserData_ProducerData_Cnpj(cnpj: String): Mono<HortaJaUser>
 
 }

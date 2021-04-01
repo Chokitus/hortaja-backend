@@ -65,7 +65,7 @@ class SecurityConfig {
       .apply {
         setRequiresAuthenticationMatcher {
           ServerWebExchangeMatchers
-            .pathMatchers(HttpMethod.POST, "/login")
+            .pathMatchers(HttpMethod.POST, "/login", "/signin")
             .matches(it)
         }
         setServerAuthenticationConverter(jwtConverter)
