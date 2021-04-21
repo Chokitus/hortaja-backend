@@ -11,37 +11,37 @@ import org.springframework.stereotype.Service
 
 @Service
 class HortaUserMapper(
-  private val passwordEncoder: PasswordEncoder,
+	private val passwordEncoder: PasswordEncoder,
 ) {
 
-  fun fromDTO(dto: UserDTO) =
-    dto.run {
-      HortaJaUser(
-        email = email,
-        password = passwordEncoder.encode(password),
-        userType = type,
-        userData = UserData(
-          name = userData.name,
-          surname = userData.surname,
-          producerData = userData.producerData?.let { fromProducerData(it) }
-        )
-      )
-    }
+	fun fromDTO(dto: UserDTO) =
+		dto.run {
+			HortaJaUser(
+				email = email,
+				password = passwordEncoder.encode(password),
+				userType = type,
+				userData = UserData(
+					name = userData.name,
+					surname = userData.surname,
+					producerData = userData.producerData?.let { fromProducerData(it) }
+				)
+			)
+		}
 
-  fun fromProducerData(producerData: ProducerDataDTO): ProducerData =
-    producerData.run {
-      ProducerData(
-        cnpj = cnpj,
-        FarmData(
-          farmName = farmName,
-          address = address,
-          cep = cep,
-          schedule = schedule,
-          phone = phone,
-          description = description,
-          photo = photo,
-          socialMedia = socialMedia
-        )
-      )
-    }
+	fun fromProducerData(producerData: ProducerDataDTO): ProducerData =
+		producerData.run {
+			ProducerData(
+				cnpj = cnpj,
+				FarmData(
+					farmName = farmName,
+					address = address,
+					cep = cep,
+					schedule = schedule,
+					phone = phone,
+					description = description,
+					photo = photo,
+					socialMedia = socialMedia
+				)
+			)
+		}
 }

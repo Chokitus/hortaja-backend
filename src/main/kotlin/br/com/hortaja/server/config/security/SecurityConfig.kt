@@ -27,64 +27,67 @@ import org.springframework.security.web.server.util.matcher.ServerWebExchangeMat
 @EnableWebFluxSecurity
 class SecurityConfig {
 
-  companion object {
-    val EXCLUDED_PATHS = arrayOf("/login", "/signup")
-  }
+	companion object {
+		val EXCLUDED_PATHS = arrayOf("/login", "/signup")
+	}
 
-  @Bean
-  fun configureSecurity(
-    http: ServerHttpSecurity,
-    jwtAuthenticationFilter: AuthenticationWebFilter,
-    jwtService: JWTService
-  ): SecurityWebFilterChain {
-    return http
-      .csrf().disable()
-      .logout().disable()
-      .authorizeExchange()
-      .pathMatchers(*EXCLUDED_PATHS).permitAll()
-      .pathMatchers("/admin/**").hasRole("ADMIN")
-      .anyExchange().authenticated()
-      .and()
-      .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-      .addFilterAt(JWTReactiveAuthorizationFilter(jwtService), SecurityWebFiltersOrder.AUTHORIZATION)
-      .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
-      .build()
-  }
+	@Bean
+	fun configureSecurity(
+		http: ServerHttpSecurity,
+		jwtAuthenticationFilter: AuthenticationWebFilter,
+		jwtService: JWTService
+	): SecurityWebFilterChain {
+		return http
+			.csrf().disable()
+			.logout().disable()
+			.authorizeExchange()
+			.pathMatchers(*EXCLUDED_PATHS).permitAll()
+			.pathMatchers("/admin/**").hasRole("ADMIN")
+			.anyExchange().authenticated()
+			.and()
+			.addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+			.addFilterAt(
+				JWTReactiveAuthorizationFilter(jwtService),
+				SecurityWebFiltersOrder.AUTHORIZATION
+			)
+			.securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
+			.build()
+	}
 
-  @Bean
-  fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+	@Bean
+	fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
-  @Bean
-  fun authenticationWebFilter(
-    reactiveAuthenticationManager: ReactiveAuthenticationManager,
-    jwtConverter: ServerAuthenticationConverter,
-    serverAuthenticationSuccessHandler: ServerAuthenticationSuccessHandler,
-    jwtServerAuthenticationFailureHandler: ServerAuthenticationFailureHandler
-  ): AuthenticationWebFilter =
-    AuthenticationWebFilter(reactiveAuthenticationManager)
-      .apply {
-        setRequiresAuthenticationMatcher {
-          ServerWebExchangeMatchers
-            .pathMatchers(HttpMethod.POST, "/login", "/signin")
-            .matches(it)
-        }
-        setServerAuthenticationConverter(jwtConverter)
-        setAuthenticationSuccessHandler(serverAuthenticationSuccessHandler)
-        setAuthenticationFailureHandler(jwtServerAuthenticationFailureHandler)
-        setSecurityContextRepository(NoOpServerSecurityContextRepository.getInstance())
-      }
+	@Bean
+	fun authenticationWebFilter(
+		reactiveAuthenticationManager: ReactiveAuthenticationManager,
+		jwtConverter: ServerAuthenticationConverter,
+		serverAuthenticationSuccessHandler: ServerAuthenticationSuccessHandler,
+		jwtServerAuthenticationFailureHandler: ServerAuthenticationFailureHandler
+	): AuthenticationWebFilter =
+		AuthenticationWebFilter(reactiveAuthenticationManager)
+			.apply {
+				setRequiresAuthenticationMatcher {
+					ServerWebExchangeMatchers
+						.pathMatchers(HttpMethod.POST, "/login", "/signin")
+						.matches(it)
+				}
+				setServerAuthenticationConverter(jwtConverter)
+				setAuthenticationSuccessHandler(serverAuthenticationSuccessHandler)
+				setAuthenticationFailureHandler(jwtServerAuthenticationFailureHandler)
+				setSecurityContextRepository(NoOpServerSecurityContextRepository.getInstance())
+			}
 
-  @Bean
-  fun jacksonDecoder(): AbstractJackson2Decoder = Jackson2JsonDecoder()
+	@Bean
+	fun jacksonDecoder(): AbstractJackson2Decoder = Jackson2JsonDecoder()
 
-  @Bean
-  fun reactiveAuthenticationManager(
-    loginService: LoginService,
-    passwordEncoder: PasswordEncoder
-  ): ReactiveAuthenticationManager =
-    UserDetailsRepositoryReactiveAuthenticationManager(loginService)
-      .apply {
-        setPasswordEncoder(passwordEncoder)
-      }
+	@Bean
+	fun reactiveAuthenticationManager(
+		loginService: LoginService,
+		passwordEncoder: PasswordEncoder
+	): ReactiveAuthenticationManager =
+		UserDetailsRepositoryReactiveAuthenticationManager(loginService)
+			.apply {
+				setPasswordEncoder(passwordEncoder)
+			}
 
 }

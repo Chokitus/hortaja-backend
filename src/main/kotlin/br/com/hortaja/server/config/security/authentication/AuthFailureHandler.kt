@@ -11,13 +11,18 @@ import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
 
 @Component
-class AuthFailtureHandler : ServerAuthenticationFailureHandler {
-  override fun onAuthenticationFailure(
-    webFilterExchange: WebFilterExchange?,
-    exception: AuthenticationException?
-  ): Mono<Void> = mono {
-    val exchange = webFilterExchange?.exchange ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized")
-    exchange.response.statusCode = HttpStatus.UNAUTHORIZED
-    exchange.response.setComplete().awaitFirstOrNull()
-  }
+class AuthFailureHandler : ServerAuthenticationFailureHandler {
+
+	override fun onAuthenticationFailure(
+		webFilterExchange: WebFilterExchange?,
+		exception: AuthenticationException?
+	): Mono<Void> = mono {
+		val exchange = webFilterExchange?.exchange ?: throw ResponseStatusException(
+			HttpStatus.UNAUTHORIZED,
+			"Unauthorized"
+		)
+		exchange.response.statusCode = HttpStatus.UNAUTHORIZED
+		exchange.response.setComplete().awaitFirstOrNull()
+	}
+
 }

@@ -14,3 +14,4 @@ application:
   auth:
     secret: secret # TODO: Hide me
     refresh: refresh # TODO: Hide me
+  google-api-key: "Censurado" # TODO: Hide me
