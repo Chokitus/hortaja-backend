@@ -3,15 +3,13 @@ package br.com.hortaja.server.service
 import br.com.hortaja.server.config.google.GoogleConfig
 import br.com.hortaja.server.model.ProducerData
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @Service
 class GoogleMapsService(
-	val googleConfig: GoogleConfig
+	private val googleConfig: GoogleConfig
 ) {
 
 	val client: WebClient = googleConfig.webClient()
